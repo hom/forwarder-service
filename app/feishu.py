@@ -57,7 +57,7 @@ async def send_sms_to_feishu(sms_data: dict) -> bool:
 
         content = json.dumps({
             "text": f"📱 收到短信\n发送方: {sender}\n接收号码: {local_number}\n时间: {timestamp}\n内容: {message}"
-        })
+        }, ensure_ascii=False)
 
         async with httpx.AsyncClient() as client:
             resp = await client.post(
