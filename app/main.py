@@ -6,7 +6,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from app.config import DATA_DIR
-from app.feishu import send_sms_to_feishu
+from app.channels import send_sms_to_feishu
 
 logger = logging.getLogger(__name__)
 
