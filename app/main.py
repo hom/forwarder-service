@@ -6,6 +6,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from app.config import DATA_DIR
+from app.feishu import send_sms_to_feishu
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +15,7 @@ app = FastAPI(title="SMS Forwarder Service")
 
 @app.post("/api/forwarder")
 async def forwarder(request: Request):
-    """接收转发的短信内容并保存到文件"""
+    """接收转发的短信内容并保存到文件，同时推送到飞书"""
     body = await request.json()
 
     # 生成带时间戳的文件名
@@ -29,6 +30,9 @@ async def forwarder(request: Request):
     filename.write_text(json.dumps(record, ensure_ascii=False, indent=2), encoding="utf-8")
 
     logger.info(f"SMS saved: {filename.name}")
+
+    # 转发到飞书
+    await send_sms_to_feishu(body)
 
     return JSONResponse(
         content={"status": "ok", "message": "saved", "file": filename.name}
