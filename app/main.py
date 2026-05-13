@@ -16,7 +16,10 @@ app = FastAPI(title="SMS Forwarder Service")
 @app.post("/api/forwarder")
 async def forwarder(request: Request):
     """接收转发的短信内容并保存到文件，同时推送到飞书"""
-    body = await request.json()
+    try:
+        body = await request.json()
+    except Exception:
+        return JSONResponse(status_code=400, content={"status": "error", "message": "Invalid JSON body"})
 
     # 生成带时间戳的文件名
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")

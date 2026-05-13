@@ -1,7 +1,36 @@
-.venv/
+# Byte-compiled / optimized
 __pycache__/
-*.pyc
-.env
-*.egg-info/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
 dist/
+*.egg-info/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+
+# Environment variables
+.env
+
+# Logs
+*.log
+
+# Data directory
 data/
+
+# IDE
+.idea/
+.vscode/
+
+# Testing / coverage
+.pytest_cache/
+htmlcov/
+.coverage
+.coverage.*
+
+# mypy / type checkers
+.mypy_cache/
+.ruff_cache/

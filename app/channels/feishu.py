@@ -49,15 +49,11 @@ async def send_sms_to_feishu(sms_data: dict) -> bool:
     try:
         token = await _get_tenant_access_token()
 
-        # 构建消息内容
-        sender = sms_data.get("sender", "未知")
-        message = sms_data.get("message", "")
-        timestamp = sms_data.get("timestamp", "")
-        local_number = sms_data.get("local_number", "")
-
-        content = json.dumps({
-            "text": f"📱 收到短信\n发送方: {sender}\n接收号码: {local_number}\n时间: {timestamp}\n内容: {message}"
-        }, ensure_ascii=False)
+        # 构建消息内容：将所有字段格式化为文本
+        lines = ["📱 收到短信"]
+        for key, value in sms_data.items():
+            lines.append(f"{key}: {value}")
+        content = json.dumps({"text": "\n".join(lines)}, ensure_ascii=False)
 
         async with httpx.AsyncClient() as client:
             resp = await client.post(
