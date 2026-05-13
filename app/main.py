@@ -22,12 +22,13 @@ async def forwarder(request: Request):
         return JSONResponse(status_code=400, content={"status": "error", "message": "Invalid JSON body"})
 
     # 生成带时间戳的文件名
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+    now = datetime.now()
+    timestamp = now.strftime("%Y%m%d_%H%M%S_%f")
     filename = DATA_DIR / f"sms_{timestamp}.json"
 
     # 写入文件
     record = {
-        "received_at": datetime.now().isoformat(),
+        "received_at": now.isoformat(),
         "data": body,
     }
     filename.write_text(json.dumps(record, ensure_ascii=False, indent=2), encoding="utf-8")
