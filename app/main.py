@@ -35,10 +35,10 @@ async def forwarder(request: Request):
     logger.info(f"SMS saved: {filename.name}")
 
     # 转发到飞书
-    await send_sms_to_feishu(body)
+    feishu_ok = await send_sms_to_feishu(body)
 
     return JSONResponse(
-        content={"status": "ok", "message": "saved", "file": filename.name}
+        content={"status": "ok", "message": "saved", "file": filename.name, "feishu": feishu_ok}
     )
 
 

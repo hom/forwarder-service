@@ -1,0 +1,13 @@
+[Unit]
+Description=Forwarder Service
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/data/forwarder-service
+ExecStart=/data/forwarder-service/.venv/bin/python main.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
