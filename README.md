@@ -30,13 +30,34 @@ docker run -p 8000:8000 --env-file .env forwarder-service
 
 ### 服务器部署（aliyun-beijing）
 
-项目部署在 `/data/forwarder-service`，通过 venv + openresty 反向代理运行。
+项目部署在 `/data/forwarder-service`，通过 systemd + openresty 反向代理运行。
 
 ```bash
 # 首次部署
 scp -r . aliyun-beijing:/data/forwarder-service
-ssh aliyun-beijing 'cd /data/forwarder-service && python3 -m venv .venv && .venv/bin/pip install -i https://pypi.tuna.tsinghua.edu.cn/simple fastapi uvicorn python-dotenv'
-ssh aliyun-beijing 'cd /data/forwarder-service && nohup .venv/bin/python main.py > app.log 2>&1 &'
+ssh aliyun-beijing 'cd /data/forwarder-service && python3 -m venv .venv && .venv/bin/pip install -i https://pypi.tuna.tsinghua.edu.cn/simple fastapi uvicorn python-dotenv httpx'
+```
+
+#### Systemd 服务管理
+
+```bash
+# 安装服务
+sudo cp /data/forwarder-service/forwarder.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable forwarder
+sudo systemctl start forwarder
+
+# 常用命令
+sudo systemctl status forwarder   # 查看状态
+sudo systemctl restart forwarder  # 重启
+sudo systemctl stop forwarder     # 停止
+journalctl -u forwarder -f        # 查看实时日志
+
+# 卸载服务
+sudo systemctl stop forwarder
+sudo systemctl disable forwarder
+sudo rm /etc/systemd/system/forwarder.service
+sudo systemctl daemon-reload
 ```
 
 #### 更新部署
@@ -44,13 +65,13 @@ ssh aliyun-beijing 'cd /data/forwarder-service && nohup .venv/bin/python main.py
 代码推送到 GitHub 后，在服务器上拉取并重启：
 
 ```bash
-ssh aliyun-beijing 'cd /data/forwarder-service && git pull && kill $(pgrep -f "python main.py"); nohup .venv/bin/python main.py > app.log 2>&1 &'
+ssh aliyun-beijing 'cd /data/forwarder-service && git pull && sudo systemctl restart forwarder'
 ```
 
 如果依赖有变化，需要重新安装：
 
 ```bash
-ssh aliyun-beijing 'cd /data/forwarder-service && git pull && .venv/bin/pip install -i https://pypi.tuna.tsinghua.edu.cn/simple fastapi uvicorn python-dotenv && kill $(pgrep -f "python main.py"); nohup .venv/bin/python main.py > app.log 2>&1 &'
+ssh aliyun-beijing 'cd /data/forwarder-service && git pull && .venv/bin/pip install -i https://pypi.tuna.tsinghua.edu.cn/simple fastapi uvicorn python-dotenv httpx && sudo systemctl restart forwarder'
 ```
 
 #### Openresty 配置
