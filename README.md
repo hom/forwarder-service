@@ -104,7 +104,7 @@ server {
 ```bash
 curl -X POST http://localhost:8000/api/forwarder \
   -H "Content-Type: application/json" \
-  -d '{"sender":"+8613800138000","message":"验证码123456","timestamp":"2026/05/12 22:55:21","local_number":"+8618610886029","remark":"无备注"}'
+  -d '{"sender":"+8618888888888","message":"验证码123456","timestamp":"2026/05/12 22:55:21","local_number":"+8618888888888","remark":"无备注"}'
 ```
 
 响应：
@@ -119,10 +119,10 @@ curl -X POST http://localhost:8000/api/forwarder \
 {
   "received_at": "2026-05-12T22:55:23.200554",
   "data": {
-    "sender": "+8613800138000",
+    "sender": "+8618888888888",
     "message": "验证码123456",
     "timestamp": "2026/05/12 22:55:21",
-    "local_number": "+8618610886029",
+    "local_number": "+8618888888888",
     "remark": "无备注"
   }
 }
